@@ -1,0 +1,63 @@
+# ToDoAplication (In development)
+
+## Project description
+
+ToDoAplication is a WPF desktop application written in C#. The app allows you to create, edit and delete to‑do items. This development version introduces two important features: task categorization and the ability to view detailed information for each record in a "Details" view.
+
+## Features
+
+- Create, edit and delete tasks (CRUD)
+- Simple, responsive WPF user interface
+- Input validation and basic error handling
+
+## Technologies
+
+- C# (.NET)
+- WPF (Windows Presentation Foundation)
+- MVVM
+
+## Installation and running
+
+1. Clone the repository:
+,,,
+   git clone https://github.com/Nefil/ToDoAplication.git
+'''
+2. Open the solution (ToDoAplication.sln) in Visual Studio.
+3. Restore NuGet packages (Build → Restore NuGet Packages).
+4. Build and run the application.
+
+## Usage example (Not all options are available yet)
+
+- Start the application.
+- Add a few categories (e.g. Work, Home, Hobby).
+- Create a new task and assign it to a chosen category.
+- Use the task list filter to show only tasks from a given category.
+- Click a task to open the "Details" view — view full information, edit or delete the record.
+
+## Future enhancements
+
+- Task categorization
+  - Add the ability to create and manage categories (e.g. Work, Home, Shopping).
+  - Filter the task list by category and other criteria (e.g. status, priority).
+  - Each task can be assigned to one category.
+  - Provide filtering and sorting of the task list by category.
+- Task details view (Details)
+  - Open a single task and view all fields (title, description, created date, due date, priority, category, notes).
+  - Edit and delete directly from the details view.
+  - Possible extensions: change history, attachments, comments.
+- Create a SQLite database that persists all Details fields
+  - Implement a local SQLite database using Entity Framework Core.
+  - Models should reflect all fields available in the Details view (for example: Title, Description, CreatedAt, DueDate, Priority, IsCompleted, CategoryId, Notes, AttachmentPaths, etc.).
+  - Add EF Core migrations and initialize the database on application startup (e.g. Database.Migrate() or EnsureCreated()).
+  - Use a safe writable path for the database file (for example, a folder inside %APPDATA% specific to the application) and ensure the folder is created automatically.
+  - Ensure CRUD operations call SaveChanges / SaveChangesAsync so data is persisted.
+  - Add integration tests using Microsoft.EntityFrameworkCore.InMemory or run tests against a real SQLite file.
+- Unit tests
+
+## Author
+
+Daniel Segeth / Nefil
+
+## License
+
+This project is distributed under the MIT License.
