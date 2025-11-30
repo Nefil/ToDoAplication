@@ -11,7 +11,7 @@ namespace ToDoAplication
             base.OnStartup(e);
 
             using (var context = new TodoDbContext(new DbContextOptions<TodoDbContext>()))
-            {   
+            {
                 // Create new database if it doesn't exist
                 context.Database.EnsureCreated();
             }

@@ -12,6 +12,9 @@
         <SolidColorBrush x:Key="PrimaryColor" Color="#E91E63"/>
         <SolidColorBrush x:Key="TextColor" Color="Black"/>
         <SolidColorBrush x:Key="ButtonTextColor" Color="White"/>
+        <SolidColorBrush x:Key="GreenColor" Color="#4CAF50"/>
+        <SolidColorBrush x:Key="BlueColor" Color="#2196F3"/>
+        <SolidColorBrush x:Key="RedColor" Color="#F44336"/>
     </Window.Resources>
 
     <Grid>
@@ -65,9 +68,13 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,8" >
                 <Button Content="Add" Width="120" Height="34" Margin="6"
                         Command="{Binding AddCommand}"
-                        Background="{StaticResource PrimaryColor}" Foreground="{StaticResource ButtonTextColor}"/>
+                        Background="{StaticResource BlueColor}" Foreground="{StaticResource ButtonTextColor}"/>
                 <Button Content="Remove Selected" Width="120" Height="34" Margin="6"
-                        Command="{Binding RemoveCommand}"/>
+                        Command="{Binding RemoveCommand}"
+                        Background="{StaticResource RedColor}" Foreground="{StaticResource ButtonTextColor}"/>
+                <Button Content="Describe" Width="120" Height="34" Margin="6"
+                        Background="{StaticResource GreenColor}" Foreground="{StaticResource ButtonTextColor}"
+                        Command="{Binding DescribeCommand}"/>
             </StackPanel>
         </Grid>
     </Grid>
