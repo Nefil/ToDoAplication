@@ -1,14 +1,20 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
+using Microsoft.EntityFrameworkCore;
+using ToDoAplication.Data;
 
 namespace ToDoAplication
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
-    }
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
 
+            using (var context = new TodoDbContext(new DbContextOptions<TodoDbContext>()))
+            {   
+                // Create new database if it doesn't exist
+                context.Database.EnsureCreated();
+            }
+        }
+    }
 }
