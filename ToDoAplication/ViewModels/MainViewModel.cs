@@ -1,13 +1,12 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using ToDoAplication.Commands;
 using ToDoAplication.Data;
 using ToDoAplication.Models;
+using ToDoAplication.Services;
 
 namespace ToDoAplication.ViewModels
 {
@@ -16,6 +15,7 @@ namespace ToDoAplication.ViewModels
         private readonly TodoDbContext _context;
         private string _newTaskText = string.Empty;
         private TodoItem? _selectedTask;
+        private readonly IDialogService _dialogService;
 
         public ObservableCollection<TodoItem> Tasks { get; } = new ObservableCollection<TodoItem>();
 
@@ -41,8 +41,9 @@ namespace ToDoAplication.ViewModels
         public ICommand RemoveCommand { get; }
         public ICommand DescribeCommand { get; }
 
-        public MainViewModel()
+        public MainViewModel(IDialogService dialogService)
         {
+            _dialogService = dialogService;
             // Initialize database context
             _context = new TodoDbContext(new DbContextOptions<TodoDbContext>());
             _context.Database.EnsureCreated();
@@ -121,90 +122,13 @@ namespace ToDoAplication.ViewModels
             if (SelectedTask == null)
                 return;
 
-            // Create input dialog for description
-            var inputDialog = new Window
+            var newDescription = _dialogService.ShowDescriptionDialog(SelectedTask.Text, SelectedTask.Describe);
+            
+            if (newDescription != null)
             {
-                Title = "Add Description",
-                Width = 400,
-                Height = 250,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                ResizeMode = ResizeMode.NoResize
-            };
-
-            var stackPanel = new System.Windows.Controls.StackPanel
-            {
-                Margin = new Thickness(10)
-            };
-
-            var titleLabel = new System.Windows.Controls.TextBlock
-            {
-                Text = $"Task: {SelectedTask.Text}",
-                FontWeight = FontWeights.Bold,
-                Margin = new Thickness(0, 0, 0, 10)
-            };
-
-            var descriptionLabel = new System.Windows.Controls.TextBlock
-            {
-                Text = "Description:",
-                Margin = new Thickness(0, 0, 0, 5)
-            };
-
-            var descriptionTextBox = new System.Windows.Controls.TextBox
-            {
-                Text = SelectedTask.Describe ?? string.Empty,
-                MinHeight = 80,
-                TextWrapping = TextWrapping.Wrap,
-                AcceptsReturn = true,
-                VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto,
-                Margin = new Thickness(0, 0, 0, 10)
-            };
-
-            var buttonPanel = new System.Windows.Controls.StackPanel
-            {
-                Orientation = System.Windows.Controls.Orientation.Horizontal,
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
-
-            var okButton = new System.Windows.Controls.Button
-            {
-                Content = "OK",
-                Width = 80,
-                Height = 30,
-                Margin = new Thickness(0, 0, 10, 0)
-            };
-
-            var cancelButton = new System.Windows.Controls.Button
-            {
-                Content = "Cancel",
-                Width = 80,
-                Height = 30
-            };
-
-            okButton.Click += (s, e) =>
-            {
-                // Update description
-                SelectedTask.Describe = descriptionTextBox.Text;
+                SelectedTask.Describe = newDescription;
                 _context.SaveChanges();
-                inputDialog.DialogResult = true;
-                inputDialog.Close();
-            };
-
-            cancelButton.Click += (s, e) =>
-            {
-                inputDialog.DialogResult = false;
-                inputDialog.Close();
-            };
-
-            buttonPanel.Children.Add(okButton);
-            buttonPanel.Children.Add(cancelButton);
-
-            stackPanel.Children.Add(titleLabel);
-            stackPanel.Children.Add(descriptionLabel);
-            stackPanel.Children.Add(descriptionTextBox);
-            stackPanel.Children.Add(buttonPanel);
-
-            inputDialog.Content = stackPanel;
-            inputDialog.ShowDialog();
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

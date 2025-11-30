@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ToDoAplication.Services;
 using ToDoAplication.ViewModels;
 
 namespace ToDoAplication
@@ -11,7 +12,8 @@ namespace ToDoAplication
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
+            // Inject DialogService into MainViewModel
+            DataContext = new MainViewModel(new DialogService());
         }
     }
 }
