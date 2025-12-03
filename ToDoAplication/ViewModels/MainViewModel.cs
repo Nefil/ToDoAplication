@@ -32,14 +32,13 @@ namespace ToDoAplication.ViewModels
             { 
                 _selectedTask = value; 
                 OnPropertyChanged(); 
-                ((RelayCommand)RemoveCommand).RaiseCanExecuteChanged();
                 ((RelayCommand)DescribeCommand).RaiseCanExecuteChanged();
             }
         }
 
         public ICommand AddCommand { get; }
-        public ICommand RemoveCommand { get; }
         public ICommand DescribeCommand { get; }
+        public ICommand DeleteMarkedCommand { get; }
 
         public MainViewModel(IDialogService dialogService)
         {
@@ -52,8 +51,8 @@ namespace ToDoAplication.ViewModels
             LoadTasksFromDatabase();
 
             AddCommand = new RelayCommand(AddTask, CanAddTask);
-            RemoveCommand = new RelayCommand(RemoveTask, CanRemoveTask);
             DescribeCommand = new RelayCommand(DescribeTask, CanDescribeTask);
+            DeleteMarkedCommand = new RelayCommand(DeleteMarkedTasks, CanDeleteMarkedTasks);
         }
 
         private void LoadTasksFromDatabase()
@@ -70,10 +69,18 @@ namespace ToDoAplication.ViewModels
 
         private void Task_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // If IsDone or Describe changed, save to database
-            if (e.PropertyName == nameof(TodoItem.IsDone) || e.PropertyName == nameof(TodoItem.Describe))
+            // If IsDone, Describe or IsMarkedForDeletion changed, save to database
+            if (e.PropertyName == nameof(TodoItem.IsDone) || 
+                e.PropertyName == nameof(TodoItem.Describe) ||
+                e.PropertyName == nameof(TodoItem.IsMarkedForDeletion))
             {
                 _context.SaveChanges();
+                
+                // Update DeleteMarkedCommand when IsMarkedForDeletion changes
+                if (e.PropertyName == nameof(TodoItem.IsMarkedForDeletion))
+                {
+                    ((RelayCommand)DeleteMarkedCommand).RaiseCanExecuteChanged();
+                }
             }
         }
 
@@ -96,25 +103,6 @@ namespace ToDoAplication.ViewModels
             NewTaskText = string.Empty;
         }
 
-        private bool CanRemoveTask() => SelectedTask != null;
-
-        private void RemoveTask()
-        {
-            if (SelectedTask != null)
-            {
-                // Unsubscribe PropertyChanged
-                SelectedTask.PropertyChanged -= Task_PropertyChanged;
-                
-                // Remove from database
-                _context.TodoItems.Remove(SelectedTask);
-                _context.SaveChanges();
-                
-                // Remove from UI collection
-                Tasks.Remove(SelectedTask);
-                SelectedTask = null;
-            }
-        }
-
         private bool CanDescribeTask() => SelectedTask != null;
 
         private void DescribeTask()
@@ -129,6 +117,30 @@ namespace ToDoAplication.ViewModels
                 SelectedTask.Describe = newDescription;
                 _context.SaveChanges();
             }
+        }
+
+        private bool CanDeleteMarkedTasks() => Tasks.Any(t => t.IsMarkedForDeletion);
+
+        private void DeleteMarkedTasks()
+        {
+            var tasksToDelete = Tasks.Where(t => t.IsMarkedForDeletion).ToList();
+            
+            foreach (var task in tasksToDelete)
+            {
+                // Unsubscribe PropertyChanged
+                task.PropertyChanged -= Task_PropertyChanged;
+                
+                // Remove from database
+                _context.TodoItems.Remove(task);
+                
+                // Remove from UI collection
+                Tasks.Remove(task);
+            }
+            
+            _context.SaveChanges();
+            
+            // Update button state after deletion
+            ((RelayCommand)DeleteMarkedCommand).RaiseCanExecuteChanged();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -12,6 +12,7 @@ namespace ToDoAplication
 
             using (var context = new TodoDbContext(new DbContextOptions<TodoDbContext>()))
             {
+                context.Database.EnsureDeleted();
                 // Create new database if it doesn't exist
                 context.Database.EnsureCreated();
             }

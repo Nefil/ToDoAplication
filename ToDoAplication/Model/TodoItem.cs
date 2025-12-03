@@ -33,6 +33,13 @@ namespace ToDoAplication.Models
             set { _describe = value; OnPropertyChanged(); }
         }
 
+        private bool _isMarkedForDeletion;
+        public bool IsMarkedForDeletion
+        {
+            get => _isMarkedForDeletion;
+            set { _isMarkedForDeletion = value; OnPropertyChanged(); }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ToDoAplication"
         mc:Ignorable="d"
-        Title="To-Do Application" Height="600" Width="500">
+        Title="To-Do Application" Height="600" Width="600">
     <Window.Resources>
         <!-- Theme Resources -->
         <SolidColorBrush x:Key="BackgroundColor" Color="White"/>
@@ -15,6 +15,7 @@
         <SolidColorBrush x:Key="GreenColor" Color="#4CAF50"/>
         <SolidColorBrush x:Key="BlueColor" Color="#2196F3"/>
         <SolidColorBrush x:Key="RedColor" Color="#F44336"/>
+        <SolidColorBrush x:Key="OrangeColor" Color="#FF9800"/>
     </Window.Resources>
 
     <Grid>
@@ -45,7 +46,10 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="4">
-                            <CheckBox IsChecked="{Binding IsDone, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Check:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold"/>
+                            <CheckBox IsChecked="{Binding IsDone, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                            <TextBlock Text="To Delete:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold" Foreground="{StaticResource OrangeColor}"/>
+                            <CheckBox IsChecked="{Binding IsMarkedForDeletion, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,15,0"/>
                             <TextBlock Text="{Binding Text}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>
@@ -69,12 +73,12 @@
                 <Button Content="Add" Width="120" Height="34" Margin="6"
                         Command="{Binding AddCommand}"
                         Background="{StaticResource BlueColor}" Foreground="{StaticResource ButtonTextColor}"/>
-                <Button Content="Remove Selected" Width="120" Height="34" Margin="6"
-                        Command="{Binding RemoveCommand}"
-                        Background="{StaticResource RedColor}" Foreground="{StaticResource ButtonTextColor}"/>
                 <Button Content="Describe" Width="120" Height="34" Margin="6"
                         Background="{StaticResource GreenColor}" Foreground="{StaticResource ButtonTextColor}"
                         Command="{Binding DescribeCommand}"/>
+                <Button Content="Delete Marked" Width="140" Height="34" Margin="6"
+                        Background="{StaticResource OrangeColor}" Foreground="{StaticResource ButtonTextColor}"
+                        Command="{Binding DeleteMarkedCommand}"/>
             </StackPanel>
         </Grid>
     </Grid>
