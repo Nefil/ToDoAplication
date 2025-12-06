@@ -50,7 +50,10 @@
                             <CheckBox IsChecked="{Binding IsDone, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,15,0"/>
                             <TextBlock Text="To Delete:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold" Foreground="{StaticResource OrangeColor}"/>
                             <CheckBox IsChecked="{Binding IsMarkedForDeletion, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,15,0"/>
-                            <TextBlock Text="{Binding Text}" VerticalAlignment="Center"/>
+                            <TextBlock Text="Task Name:" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding Text}" Margin="2,0,5,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Created At:" VerticalAlignment="Center" Margin="15,0,5,0" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding CreatedAt}"/> 
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

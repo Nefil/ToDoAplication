@@ -25,6 +25,7 @@ namespace ToDoAplication.ViewModels
 
         public ICommand OkCommand { get; }
         public ICommand CancelCommand { get; }
+        public ICommand ClearCommand { get; }
 
         // Event to notify View to close dialog
         public event EventHandler<bool>? RequestClose;
@@ -35,8 +36,13 @@ namespace ToDoAplication.ViewModels
             Description = initialDescription ?? string.Empty;
             OkCommand = new RelayCommand(OnOk);
             CancelCommand = new RelayCommand(OnCancel);
+            ClearCommand = new RelayCommand(OnClear);
         }
 
+        private void OnClear()
+        {
+            Description = string.Empty;
+        }
         private void OnOk()
         {
             // Notify View to close with DialogResult = true
