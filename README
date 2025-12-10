@@ -1,63 +1,54 @@
-# ToDoAplication (In development)
+# ToDoAplication
 
-## Project description
+A lightweight WPF (MVVM) desktop application for task management (to-do). It allows you to create, edit, archive, and delete tasks. It includes a simple detail view (Description) and validation and filtering mechanisms.
 
-ToDoAplication is a WPF desktop application written in C#. The app allows you to create, edit and delete to‑do items. This development version introduces two important features: task categorization and the ability to view detailed information for each record in a "Details" view.
+## Table of Contents
+- Project Description
+- Features
+- Quick Start
+- Usage
+- Requirements and Environment
+- Proposed Enhancements
+- License
 
-## Features
+## Project Description
+ToDoAplication is a simple task manager written in C# using WPF and the MVVM pattern. The project aims to facilitate basic CRUD operations on tasks and organization through categories and archiving.
 
-- Create, edit and delete tasks (CRUD)
-- Simple, responsive WPF user interface
-- Input validation and basic error handling
+## Features (current)
+- Creating, editing, and deleting tasks (CRUD).
+- Task archiving – moving tasks to the archive, the ability to delete them from the archive, and restoring them to the main view.
+- Detail view (Description) for a single task – adding/editing a description.
+- Checkboxes and simple flags on tasks (e.g., marking completion).
 
-## Technologies
+- Simple input validations and basic error handling.
 
-- C# (.NET)
-- WPF (Windows Presentation Foundation)
-- MVVM
-
-## Installation and running
-
+## Quick Start
 1. Clone the repository:
-,,,
-   git clone https://github.com/Nefil/ToDoAplication.git
-'''
-2. Open the solution (ToDoAplication.sln) in Visual Studio.
-3. Restore NuGet packages (Build → Restore NuGet Packages).
-4. Build and run the application.
+git clone https://github.com/Nefil/ToDoAplication.git
 
-## Usage example (Not all options are available yet)
+2. Open the `ToDoAplication.sln` solution in Visual Studio (or another IDE that supports WPF).
 
-- Start the application.
-- Add a few categories (e.g. Work, Home, Hobby).
-- Create a new task and assign it to a chosen category.
-- Use the task list filter to show only tasks from a given category.
-- Click a task to open the "Details" view — view full information, edit or delete the record.
+3. Restore NuGet packages:
+- Visual Studio: Build → Restore NuGet Packages
+- or: dotnet restore in the solution directory
 
-## Future enhancements
+4. Build and run the project (Build → Build Solution → Start).
 
-- Task categorization
-  - Add the ability to create and manage categories (e.g. Work, Home, Shopping).
-  - Filter the task list by category and other criteria (e.g. status, priority).
-  - Each task can be assigned to one category.
-  - Provide filtering and sorting of the task list by category.
-- Task details view (Details)
-  - Open a single task and view all fields (title, description, created date, due date, priority, category, notes).
-  - Edit and delete directly from the details view.
-  - Possible extensions: change history, attachments, comments.
-- Create a SQLite database that persists all Details fields
-  - Implement a local SQLite database using Entity Framework Core.
-  - Models should reflect all fields available in the Details view (for example: Title, Description, CreatedAt, DueDate, Priority, IsCompleted, CategoryId, Notes, AttachmentPaths, etc.).
-  - Add EF Core migrations and initialize the database on application startup (e.g. Database.Migrate() or EnsureCreated()).
-  - Use a safe writable path for the database file (for example, a folder inside %APPDATA% specific to the application) and ensure the folder is created automatically.
-  - Ensure CRUD operations call SaveChanges / SaveChangesAsync so data is persisted.
-  - Add integration tests using Microsoft.EntityFrameworkCore.InMemory or run tests against a real SQLite file.
-- Unit tests
+## Usage (briefly)
+- Run the application.
+- Create a new task and give it a title.
+- Click the task to select it; click the description button to add/edit the Description.
+- Set the checkboxes corresponding to the task's status (e.g., completed/important).
+- Archive tasks when they are no longer active; review and restore them from the archive as needed. Requirements and Environment
+- Operating System: Windows (WPF)
+- .NET SDK: Check `ToDoAplication/ToDoAplication.csproj` to determine the Target Framework (recommended: .NET 6.0 LTS or .NET 7.0)
+- IDE: Visual Studio 2022 / Rider / other with WPF support
 
-## Author
-
-Daniel Segeth / Nefil
+## Proposed Improvements (briefly)
+- Full CRUD for categories and filtering by category.
+- Expanded Description/Details view: notes, change history, attachments.
+- Task export/import (JSON/CSV).
+- Multilingual support (resx) and UI themes (dark/light).
 
 ## License
-
-This project is distributed under the MIT License.
+Project distributed under the MIT License
