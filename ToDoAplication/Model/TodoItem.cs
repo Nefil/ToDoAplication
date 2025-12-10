@@ -40,11 +40,10 @@ namespace ToDoAplication.Models
             set { _isMarkedForDeletion = value; OnPropertyChanged(); }
         }
 
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? DueDate { get; set; }
     }
 }

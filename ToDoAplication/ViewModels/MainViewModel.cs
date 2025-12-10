@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -39,6 +39,7 @@ namespace ToDoAplication.ViewModels
         public ICommand AddCommand { get; }
         public ICommand DescribeCommand { get; }
         public ICommand DeleteMarkedCommand { get; }
+        public ICommand ArchiveCommand { get; }
 
         public MainViewModel(IDialogService dialogService)
         {
@@ -53,6 +54,7 @@ namespace ToDoAplication.ViewModels
             AddCommand = new RelayCommand(AddTask, CanAddTask);
             DescribeCommand = new RelayCommand(DescribeTask, CanDescribeTask);
             DeleteMarkedCommand = new RelayCommand(DeleteMarkedTasks, CanDeleteMarkedTasks);
+            ArchiveCommand = new RelayCommand(ArchiveMarkedTasks, CanArchiveMarkedTasks);
         }
 
         private void LoadTasksFromDatabase()
@@ -67,6 +69,37 @@ namespace ToDoAplication.ViewModels
             }
         }
 
+        public void RefreshTasks()
+        {
+            // Unsubscribe from all tasks
+            foreach (var task in Tasks.ToList())
+            {
+                task.PropertyChanged -= Task_PropertyChanged;
+            }
+            
+            // Clear the collection
+            Tasks.Clear();
+            
+            // Use a fresh context to reload data
+            using (var freshContext = new TodoDbContext(new DbContextOptions<TodoDbContext>()))
+            {
+                var tasksFromDb = freshContext.TodoItems.ToList();
+                foreach (var task in tasksFromDb)
+                {
+                    // Attach task to the main context
+                    _context.Entry(task).State = EntityState.Detached;
+                    _context.Attach(task);
+                    
+                    Tasks.Add(task);
+                    task.PropertyChanged += Task_PropertyChanged;
+                }
+            }
+            
+            // Refresh button states
+            ((RelayCommand)ArchiveCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)DeleteMarkedCommand).RaiseCanExecuteChanged();
+        }
+
         private void Task_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             // If IsDone, Describe or IsMarkedForDeletion changed, save to database
@@ -76,10 +109,12 @@ namespace ToDoAplication.ViewModels
             {
                 _context.SaveChanges();
                 
-                // Update DeleteMarkedCommand when IsMarkedForDeletion changes
-                if (e.PropertyName == nameof(TodoItem.IsMarkedForDeletion))
+                // Update commands when IsDone or IsMarkedForDeletion changes
+                if (e.PropertyName == nameof(TodoItem.IsMarkedForDeletion) || 
+                    e.PropertyName == nameof(TodoItem.IsDone))
                 {
                     ((RelayCommand)DeleteMarkedCommand).RaiseCanExecuteChanged();
+                    ((RelayCommand)ArchiveCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -119,6 +154,7 @@ namespace ToDoAplication.ViewModels
             }
         }
 
+        // DELETE MARKED - permanently deletes tasks with "Delete" checkbox
         private bool CanDeleteMarkedTasks() => Tasks.Any(t => t.IsMarkedForDeletion);
 
         private void DeleteMarkedTasks()
@@ -140,6 +176,41 @@ namespace ToDoAplication.ViewModels
             _context.SaveChanges();
             
             // Update button state after deletion
+            ((RelayCommand)DeleteMarkedCommand).RaiseCanExecuteChanged();
+            ((RelayCommand)ArchiveCommand).RaiseCanExecuteChanged();
+        }
+
+        // ARCHIVE - archives only tasks with IsDone = true
+        private bool CanArchiveMarkedTasks() => Tasks.Any(t => t.IsDone);
+
+        private void ArchiveMarkedTasks()
+        {
+            var tasksToArchive = Tasks.Where(t => t.IsDone).ToList();
+            
+            foreach (var task in tasksToArchive)
+            {
+                // Create archived task with description
+                var archivedTask = new ArchivedTask
+                {
+                    Text = task.Text,
+                    IsCompleted = task.IsDone,
+                    Description = task.Describe,
+                    ArchivedDate = DateTime.Now
+                };
+                
+                // Add to archive
+                _context.ArchivedTasks.Add(archivedTask);
+                
+                // Remove from active tasks
+                task.PropertyChanged -= Task_PropertyChanged;
+                _context.TodoItems.Remove(task);
+                Tasks.Remove(task);
+            }
+            
+            _context.SaveChanges();
+            
+            // Update button states
+            ((RelayCommand)ArchiveCommand).RaiseCanExecuteChanged();
             ((RelayCommand)DeleteMarkedCommand).RaiseCanExecuteChanged();
         }
 

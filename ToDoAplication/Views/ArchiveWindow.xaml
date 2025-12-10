@@ -1,0 +1,72 @@
+﻿<Window x:Class="ToDoAplication.Views.ArchiveWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ToDoAplication.Views"
+        mc:Ignorable="d"
+        Title="Archive" Height="600" Width="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0"
+                   Text="Archive"
+                   HorizontalAlignment="Center"
+                   FontSize="36"
+                   Foreground="{StaticResource PrimaryColor}"
+                   Margin="0,12"/>
+
+        <!-- Task list -->
+        <Border Grid.Row="1" Margin="6" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Padding="4">
+            <ListBox ItemsSource="{Binding ArchivedTasks}"
+                     SelectedItem="{Binding SelectedArchivedTask, Mode=TwoWay}"
+                     HorizontalContentAlignment="Stretch"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="4">
+                            <TextBlock Text="Select:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold"/>
+                            <CheckBox IsChecked="{Binding IsMarkedForRestore, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                            <TextBlock Text="Task:" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding Text}" Margin="5,0,15,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Completed:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding IsCompleted}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Archived:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding ArchivedDate, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+        <!-- Buttons -->
+        <Border Grid.Row="2" 
+                BorderBrush="LightGray" 
+                BorderThickness="0,1,0,0"
+                Padding="6"
+                Background="White">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8">
+                <Button Content="Show Description" Width="140" Height="34" Margin="6"
+                        Command="{Binding ShowDescriptionCommand}"
+                        Background="{StaticResource PurpleColor}" 
+                        Foreground="{StaticResource ButtonTextColor}"
+                        FontWeight="SemiBold"/>
+                <Button Content="Restore Selected" Width="140" Height="34" Margin="6"
+                        Command="{Binding RestoreCommand}"
+                        Background="{StaticResource GreenColor}" 
+                        Foreground="{StaticResource ButtonTextColor}"
+                        FontWeight="SemiBold"/>
+                <Button Content="Delete Permanently" Width="160" Height="34" Margin="6"
+                        Background="{StaticResource RedColor}" 
+                        Foreground="{StaticResource ButtonTextColor}"
+                        FontWeight="SemiBold"
+                        Command="{Binding DeletePermanentlyCommand}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

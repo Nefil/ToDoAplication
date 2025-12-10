@@ -1,11 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ToDoAplication.Models;
+using ToDoAplication.Models;  
 
 namespace ToDoAplication.Data
 {
     public class TodoDbContext : DbContext
     {
+        // Active tasks
         public DbSet<TodoItem> TodoItems { get; set; } = null!;
+
+        // Archived tasks
+        public DbSet<ArchivedTask> ArchivedTasks { get; set; } = null!;
 
         public TodoDbContext(DbContextOptions<TodoDbContext> options) : base(options)
         {
@@ -23,17 +27,28 @@ namespace ToDoAplication.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<TodoItem>(entity =>
-            {
-                // Map only Text property
-                entity.Property(t => t.Text)
-                    .HasMaxLength(100)
-                    .IsRequired()
-                    .HasColumnName("Text"); // Force column name
+            // Active tasks configuration
+            modelBuilder.Entity<TodoItem>()
+                .ToTable("TodoItems");
+                
+            modelBuilder.Entity<TodoItem>()
+                .Property(t => t.Text)
+                .HasMaxLength(100)
+                .IsRequired();
 
-                // Ignore _text field (should not be needed, but just in case)
-                entity.Ignore("_text");
-            });
+            // Archive configuration
+            modelBuilder.Entity<ArchivedTask>()
+                .ToTable("ArchivedTasks");
+                
+            modelBuilder.Entity<ArchivedTask>()
+                .Property(t => t.Text)
+                .HasMaxLength(100)
+                .IsRequired();
+                
+            // Description column configuration
+            modelBuilder.Entity<ArchivedTask>()
+                .Property(t => t.Description)
+                .HasMaxLength(500);
         }
     }
 }

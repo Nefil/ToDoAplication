@@ -4,6 +4,16 @@
              xmlns:local="clr-namespace:ToDoAplication"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-         
+        <!-- Global theme colors to avoid duplication -->
+        <SolidColorBrush x:Key="BackgroundColor" Color="White"/>
+        <SolidColorBrush x:Key="PrimaryColor" Color="#E91E63"/>
+        <SolidColorBrush x:Key="TextColor" Color="Black"/>
+        <SolidColorBrush x:Key="ButtonTextColor" Color="White"/>
+        <SolidColorBrush x:Key="GreenColor" Color="#4CAF50"/>
+        <SolidColorBrush x:Key="BlueColor" Color="#2196F3"/>
+        <SolidColorBrush x:Key="RedColor" Color="#F44336"/>
+        <SolidColorBrush x:Key="OrangeColor" Color="#FF9800"/>
+        <SolidColorBrush x:Key="PurpleColor" Color="#9C27B0"/>
+        <SolidColorBrush x:Key="TealColor" Color="#009688"/>
     </Application.Resources>
 </Application>

@@ -4,9 +4,6 @@ using ToDoAplication.ViewModels;
 
 namespace ToDoAplication
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -14,6 +11,18 @@ namespace ToDoAplication
             InitializeComponent();
             // Inject DialogService into MainViewModel
             DataContext = new MainViewModel(new DialogService());
+        }
+
+        private void ViewArchive_Click(object sender, RoutedEventArgs e)
+        {
+            var archiveWindow = new Views.ArchiveWindow();
+            archiveWindow.ShowDialog();
+            
+            // Refresh task list after archive window is closed
+            if (DataContext is MainViewModel viewModel)
+            {
+                viewModel.RefreshTasks();
+            }
         }
     }
 }

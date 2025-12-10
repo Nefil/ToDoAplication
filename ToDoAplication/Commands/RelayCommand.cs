@@ -18,7 +18,15 @@ namespace ToDoAplication.Commands
 
         public void Execute(object? parameter) => _execute?.Invoke();
 
-        public event EventHandler? CanExecuteChanged;
-        public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        public event EventHandler? CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
+
+        public void RaiseCanExecuteChanged() 
+        {
+            CommandManager.InvalidateRequerySuggested();
+        }
     }
 }

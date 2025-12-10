@@ -6,18 +6,6 @@
         xmlns:local="clr-namespace:ToDoAplication"
         mc:Ignorable="d"
         Title="To-Do Application" Height="600" Width="600">
-    <Window.Resources>
-        <!-- Theme Resources -->
-        <SolidColorBrush x:Key="BackgroundColor" Color="White"/>
-        <SolidColorBrush x:Key="PrimaryColor" Color="#E91E63"/>
-        <SolidColorBrush x:Key="TextColor" Color="Black"/>
-        <SolidColorBrush x:Key="ButtonTextColor" Color="White"/>
-        <SolidColorBrush x:Key="GreenColor" Color="#4CAF50"/>
-        <SolidColorBrush x:Key="BlueColor" Color="#2196F3"/>
-        <SolidColorBrush x:Key="RedColor" Color="#F44336"/>
-        <SolidColorBrush x:Key="OrangeColor" Color="#FF9800"/>
-    </Window.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -38,6 +26,17 @@
                    Foreground="{StaticResource PrimaryColor}"
                    Margin="0,12"/>
 
+        <Button Grid.Row="0" Grid.Column="0" 
+                Content="View Archive" 
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Margin="0,12,12,12"
+                Width="120"
+                Height="34"
+                Background="{StaticResource PurpleColor}" 
+                Foreground="{StaticResource ButtonTextColor}"
+                Click="ViewArchive_Click"/>
+
         <Border Grid.Row="1" Grid.Column="0" Margin="6" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Padding="4">
             <ListBox ItemsSource="{Binding Tasks}"
                      SelectedItem="{Binding SelectedTask, Mode=TwoWay}"
@@ -46,14 +45,14 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="4">
-                            <TextBlock Text="Check:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold"/>
+                            <TextBlock Text="Done:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold"/>
                             <CheckBox IsChecked="{Binding IsDone, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,15,0"/>
-                            <TextBlock Text="To Delete:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold" Foreground="{StaticResource OrangeColor}"/>
+                            <TextBlock Text="Delete:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold" Foreground="{StaticResource RedColor}"/>
                             <CheckBox IsChecked="{Binding IsMarkedForDeletion, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,15,0"/>
-                            <TextBlock Text="Task Name:" FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding Text}" Margin="2,0,5,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Created At:" VerticalAlignment="Center" Margin="15,0,5,0" FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding CreatedAt}"/> 
+                            <TextBlock Text="Task:" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding Text}" Margin="5,0,15,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Created:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding CreatedAt, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}"/> 
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -80,8 +79,11 @@
                         Background="{StaticResource GreenColor}" Foreground="{StaticResource ButtonTextColor}"
                         Command="{Binding DescribeCommand}"/>
                 <Button Content="Delete Marked" Width="140" Height="34" Margin="6"
-                        Background="{StaticResource OrangeColor}" Foreground="{StaticResource ButtonTextColor}"
+                        Background="{StaticResource RedColor}" Foreground="{StaticResource ButtonTextColor}"
                         Command="{Binding DeleteMarkedCommand}"/>
+                <Button Content="Move to Archive" Width="140" Height="34" Margin="6"
+                        Command="{Binding ArchiveCommand}"
+                        Background="{StaticResource TealColor}" Foreground="{StaticResource ButtonTextColor}"/>
             </StackPanel>
         </Grid>
     </Grid>
